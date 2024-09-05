@@ -55,8 +55,7 @@ if($getaction=="register" and Multiuser=="1"){ // 注册
 <body>
 <div class='login login-itlu-ui'>
 	<div id="login">
-		<h1><a href="https://itlu.org/articles/2550.html" title="基于PHP多用户记账系统" tabindex="-1">基于PHP多用户记账系统</a></h1>
-		<p class="message" style="display:none;">请输入您的用户名或电子邮箱地址。您会收到一封包含创建新密码链接的电子邮件。</p>
+		<h1><a href="//itlu.org/jizhang/" title="基于PHP多用户记账系统" tabindex="-1">基于PHP多用户记账系统</a></h1>
 		<div id="login_error" style="display:none;"></div>		
 		<form method="post" name="<?php echo $form_name;?>" id="<?php echo $form_name;?>">
 			<?php echo $showlogin_form;?>
@@ -74,6 +73,7 @@ if($getaction=="register" and Multiuser=="1"){ // 注册
 </div>
 <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/login_check.js"></script>
 <script>
 try{document.getElementById('<?php echo $first_input;?>').focus();}catch(e){}
 document.onkeydown = function(e){
@@ -83,76 +83,11 @@ document.onkeydown = function(e){
 		return false;
 	}
 }
-
+$("#login").append("<div id=\"sys"+"name\">&#35760;&#36134;&#31995;&#32479;&#20813;&#36153;&#29256; <?php echo $version;?></div>");
 $("#itlu-submit").click(function(){
 	login_check('#<?php echo $form_name;?>','<?php echo $getaction;?>');
 });
-// 提交数据
-function submitdate(formname,type){
-	posturl = "login_chk.php?action="+type;
-	$.ajax({
-		type: "POST",
-		dataType: "json",
-		url: posturl ,//url
-		data: $(formname).serialize(),
-		success: function (result) {
-			$("#login_error").show();
-			tipsword = "错误";
-			var data = '';
-			if(result != ''){
-				data = eval("("+result+")");    //将返回的json数据进行解析，并赋给data
-			}
-			if(data.code == "1"){tipsword = "成功";}
-			$('#login_error').html("<strong>"+tipsword+"</strong>：" + data.error_msg);    //在#text中输出
-			if(data.url != ""){location.href=data.url;}			
-		},
-		error : function(result) {
-			$("#login_error").hide();
-			console.log(result);
-		}
-	});
-}
-//登录检查
-function login_check(formname,type){
-	if(type=="login"){
-		if(($("#user_name").val() == "") || ($("#user_pass").val() == "")){
-			alert("用户名、密码不能为空啊！");
-			$("#user_name").focus();
-			return false;
-		}
-		if($("#user_pass").val().length < 6){
-			alert("密码至少要6位数！");
-			$("#user_pass").focus();
-			return false;
-		}
-	}
-	if(type=="getpassword"){
-		if($("#user_email").val() == ""){
-			alert("邮箱不能为空啊！");
-			$("#user_email").focus();
-			return false;
-		}
-	}
-	if(type=="register"){
-		if(($("#user_name").val() == "") || ($("#user_email").val() == "") || ($("#user_pass").val() == "")){
-			alert("用户名、邮箱、密码不能为空啊！");
-			$("#user_name").focus();
-			return false;
-		}
-		if($("#user_email").val().length > 30){
-			alert("邮箱最多只能30个字符！");
-			$("#user_email").focus();
-			return false;
-		}
-		if($("#user_pass").val().length < 6){
-			alert("密码至少要6位数！");
-			$("#user_pass").focus();
-			return false;
-		}
-	}
-	submitdate(formname,type);
-	return false;
-}
 </script>
+
 </body>
 </html>
